@@ -6,6 +6,8 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Iterator;
 
 import javax.imageio.IIOImage;
@@ -36,6 +38,7 @@ public class TestTiffWriteRepetition {
     ImageIO.scanForPlugins();
 
     // Sub-issue 1: The tmpFile "_tmp1.tiff" is persisted on disk although setUserCache = false
+    // Solution ByteArrayOutputStream for example
     ImageIO.setUseCache(false);
 
     TestTiffWriteRepetition t = new TestTiffWriteRepetition();
@@ -44,7 +47,7 @@ public class TestTiffWriteRepetition {
   }
 
   private void run() throws Exception {
-    File page = loadFile("dina4.tiff");
+    File page = loadFile("dina4-fogra39.tiff");
     File colorTiff = loadFile("color.tiff");
     // Sub-issue 2: value of i > 1 produces an ArrayIndexOutOfBoundsException
     for (int i = 0; i < 1; i++) {
@@ -62,8 +65,8 @@ public class TestTiffWriteRepetition {
 
 
     // Optional: Copy the file to some destination
-    // File output = new File("issue-02-output.tiff");
-    // Files.copy(page.toPath(), output.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    File output = new File("issue-02-output.tiff");
+    Files.copy(page.toPath(), output.toPath(), StandardCopyOption.REPLACE_EXISTING);
   }
 
   private void testWriteTifftoTiff(File inFile1, File inFile2, File outFile) throws Exception {
